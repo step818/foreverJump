@@ -1,7 +1,8 @@
 import { Image, View } from "react-native";
 
 import React from "react";
-import jumper from "../../assets/images/monkey.png";
+import monkey from "../../assets/images/monkey.png";
+import styles from "./renderers-styles";
 
 const Jumper = ({ body, size }) => {
   // (width/2, height -170)
@@ -16,9 +17,9 @@ const Jumper = ({ body, size }) => {
 
   return (
     <Image
-      source={jumper}
+      source={monkey}
       style={[
-        styles.rocket,
+        styles.monkey,
         {
           left: x,
           top: y,
@@ -31,11 +32,11 @@ const Jumper = ({ body, size }) => {
 };
 
 const Branch = ({ body, size }) => {
-  return <Image source={jumper} />;
+  return <Image source={monkey} />;
 };
 
 const Floor = ({ body, size }) => {
-  return <Image source={jumper} />;
+  return <Image source={monkey} />;
 };
 
 export { Jumper, Floor, Branch };

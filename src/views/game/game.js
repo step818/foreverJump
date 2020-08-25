@@ -1,9 +1,14 @@
+import { AppState, Dimensions } from "react-native";
 import { Branch, Floor, Jumper } from "../../components/renderers";
 import React, { PureComponent } from "react";
 
 import { GameEngine } from "react-native-game-engine";
 import Matter from "matter-js";
+import { Physics } from "./systems";
 import { get } from "lodash";
+
+const INIT_COMPLEXITY = 2;
+const { width, height } = Dimensions.get("window");
 
 class Game extends PureComponent {
   static navigationOptions = {
@@ -14,6 +19,21 @@ class Game extends PureComponent {
     super(props);
     this.state = this.initState;
   }
+
+  reloadApp = () => {
+    const { engine } = this.state.entities.physics;
+    Matter.World.clear(engine.world);
+    Matter.Engine.clear(engine);
+    Matter.Events.off(engine, "collisionStart");
+
+    const newState = {
+      ...this.initState,
+    };
+    this.setState(newState, () => {
+      this.refs.engine.swap(newState.entities);
+      this.incrementScore();
+    });
+  };
 
   get obstacles() {
     const obstacles = {};
@@ -55,6 +75,7 @@ class Game extends PureComponent {
   }
 
   render() {
+    const { entities, appState } = this.state;
     return (
       <GameEngine
         ref="engine"
