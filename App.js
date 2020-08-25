@@ -1,21 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as Font from "expo-font";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import React, { PureComponent } from "react";
+
+import { AppLoading } from "expo";
+import AppNavigator from "./src/home-stack";
+import { Asset } from "expo-asset";
+
+export default class App extends PureComponent {
+  state = {
+    isLoadingComplete: false,
+  };
+
+  loadResourcesAsync = async () =>
+    Promise.all([
+      // Asset.loadAsync([]),
+      Font.loadAsync({
+        indieFlower: require("./assets/fonts/IndieFlower-Regular.ttf"),
+      }),
+    ]);
+
+  handleLoadingError = (error) => {
+    console.warn(error);
+  };
+
+  handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
+  };
+
+  render() {
+    if (!this.state.isLoadingComplete) {
+      return (
+        <AppLoading
+          startAsync={this.loadResourcesAsync}
+          onError={this.handleLoadingError}
+          onFinish={this.handleFinishLoading}
+        />
+      );
+    }
+
+    return <AppNavigator />;
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
