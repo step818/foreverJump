@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
     height: 100,
     position: "absolute",
   },
+
+  branch: {
+    position: "absolute",
+    width: 35,
+    height: 5,
+  },
 });
 
 export default styles;

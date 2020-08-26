@@ -1,11 +1,13 @@
 import { AppState, Dimensions } from "react-native";
-import { Branch, Floor, Jumper } from "../../components/renderers";
+import { Branch, Jumper } from "../../components/renderers";
 import React, { PureComponent } from "react";
 
 import { GameEngine } from "react-native-game-engine";
 import Matter from "matter-js";
-import { Physics } from "./systems";
 import { get } from "lodash";
+
+// import { Physics } from "./systems";
+
 
 const INIT_COMPLEXITY = 2;
 const { width, height } = Dimensions.get("window");
@@ -47,7 +49,23 @@ class Game extends PureComponent {
   get branches() {
     const branches = {};
     for (let i = 0; i < PLATFORM_COUNTER; i++) {
-      const { branch, body } = this.branches;
+      const size = 35;
+      Object.assign(branches, {
+        [`branch_${i}`]: {
+          body: Matter.Bodies.rectangle(
+            randomInt(18, width - 18),
+            randomInt(0, -150),
+            size,
+            5,
+            {
+              label: "platform",
+              isStatic: true,
+            }
+          ),
+          size: [size, 5],
+          renderer: Branch,
+        },
+      });
     }
   }
 
@@ -77,7 +95,7 @@ class Game extends PureComponent {
       label: "branch",
       isSensor: true,
     });
-    const { branches, branchesInWorld } = this.branches;
+    // const { branches, branchesInWorld } = this.branches;
 
     Matter.World.add(world, [jumper, ...branchesInWorld]);
 
@@ -86,7 +104,7 @@ class Game extends PureComponent {
         engine,
         world,
       },
-      ...branches,
+      // ...branches,
       jumper: { body: jumper, size: [50, 100], renderer: Jumper },
       branch: { body: branch, size: [50, 15], renderer: Branch },
     };

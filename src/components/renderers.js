@@ -1,6 +1,7 @@
 import { Image, View } from "react-native";
 
 import React from "react";
+import branch from "../../assets/images/branch.png";
 import monkey from "../../assets/images/monkey.png";
 import styles from "./renderers-styles";
 
@@ -32,11 +33,30 @@ const Jumper = ({ body, size }) => {
 };
 
 const Branch = ({ body, size }) => {
-  return <Image source={monkey} />;
+  const { position } = body;
+  const sizeWidth = size[0];
+  const sizeHeight = size[1];
+  const x = position.x;
+  const y = position.y;
+
+  return (
+    <Image
+      source={branch}
+      style={[
+        styles.branch,
+        {
+          left: x,
+          top: y,
+          width: sizeWidth,
+          height: sizeHeight,
+        },
+      ]}
+    />
+  );
 };
 
-const Floor = ({ body, size }) => {
-  return <Image source={monkey} />;
-};
+// const Floor = ({ body, size }) => {
+//   return <Image source={monkey} />;
+// };
 
-export { Jumper, Floor, Branch };
+export { Jumper, Branch };
