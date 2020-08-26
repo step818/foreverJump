@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
 
   branch: {
     position: "absolute",
-    width: 35,
-    height: 5,
+    width: 50,
+    height: 15,
   },
 });
 

@@ -13,6 +13,7 @@ export default class App extends PureComponent {
 
   loadResourcesAsync = async () =>
     Promise.all([
+      Asset.loadAsync([require("./assets/images/branch.png")]),
       Asset.loadAsync([require("./assets/images/monkey.png")]),
       Font.loadAsync({
         indieFlower: require("./assets/fonts/IndieFlower-Regular.ttf"),
