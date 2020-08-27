@@ -1,10 +1,11 @@
-import { AppState, Dimensions } from "react-native";
+import { AppState, Dimensions, StatusBar } from "react-native";
 import { Branch, Jumper } from "../../components/renderers";
+import { Physics, Tilt } from "./systems";
 import React, { PureComponent } from "react";
 
+import { Accelerometer } from "expo-sensors";
 import { GameEngine } from "react-native-game-engine";
 import Matter from "matter-js";
-import { Physics } from "./systems";
 import { get } from "lodash";
 
 const INIT_COMPLEXITY = 2;
@@ -22,8 +23,18 @@ class Game extends PureComponent {
 
     this.state = this.initState;
   }
-  // componentDidMount() {
-  //   Matter.Body.set(this.refs)
+  componentDidMount() {
+    this._subscription = Accelerometer.addListener(({ x }) => {
+      Matter.Body.set(this.refs.engine.state.entities.jumper.body, {
+        xtilt: x,
+      });
+    });
+
+    AppState.addEventListener("change", this.handleAppStateChange);
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { complexity } = this.state;
   // }
 
   componentWillUnmount() {
@@ -50,6 +61,20 @@ class Game extends PureComponent {
   //     // this.incrementScore();
   //   });
   // };
+
+  setupCollisionHandler = (engine) => {
+    Matter.Events.on(engine, "collisionStart", (event) => {
+      const { pairs } = event;
+      const objA = pairs[0].bodyA.label;
+      const objB = pairs[0].bodyB.label;
+      if (objA === "jumper" && objB === "platform") {
+        Matter.Body.setPosition(pairs[0].bodyA, {
+          x: width / 2,
+          y: height - 50,
+        });
+      }
+    });
+  };
 
   // get obstacles() {
   //   const obstacles = {};
@@ -96,18 +121,26 @@ class Game extends PureComponent {
     const engine =
       get(this, "state.entities.physics.engine") ||
       Matter.Engine.create({ enableSleeping: false });
+    // Matter.Engine.Create -  creates our bodies to put in the world
     const { world } = engine;
-    const jumper = Matter.Bodies.rectangle(width / 2, height - 170, 40, 80, {
-      isStatice: false,
+    const jumper = Matter.Bodies.rectangle(width / 2, height - 1000, 40, 80, {
+      isStatic: false,
       xtilt: 0,
+      restitution: 0.4,
+      friction: 0.8,
       label: "jumper",
     });
-    const branch = Matter.Bodies.rectangle(width / 2, height - 50, 50, 15, {
+    const branch = Matter.Bodies.rectangle(width / 2, height - 50, 1000, 500, {
       isStatic: true,
-      label: "branch",
+      label: "platform",
       isSensor: true,
+      friction: 1,
+      restitution: 0.8,
     });
     // const { branches, branchesInWorld } = this.branches;
+    console.log(jumper);
+    console.log(branch);
+    this.setupCollisionHandler(engine);
     // add the bodies to the world
     Matter.World.add(world, [jumper, branch]);
 
@@ -128,9 +161,11 @@ class Game extends PureComponent {
       <GameEngine
         ref="engine"
         entities={entities}
-        systems={[Physics]}
+        systems={[Physics, Tilt]}
         running={appState === "active"}
-      ></GameEngine>
+      >
+        <StatusBar hidden />
+      </GameEngine>
     );
   }
 }

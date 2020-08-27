@@ -6,19 +6,26 @@ import monkey from "../../assets/images/monkey.png";
 import styles from "./renderers-styles";
 
 const Jumper = ({ body, size }) => {
-  // (width/2, height -170)
   const { position } = body;
-  //  = 50
   const sizeWidth = size[0];
-  // = 100
   const sizeHeight = size[1];
-  // x =  (width/2)
   const x = position.x - sizeWidth / 2;
   const y = position.y + sizeHeight - 170;
 
   return (
-    <Image
-      source={monkey}
+    // <Image
+    //   source={monkey}
+    //   style={[
+    //     styles.monkey,
+    //     {
+    //       left: x,
+    //       top: y,
+    //       width: sizeWidth,
+    //       height: sizeHeight,
+    //     },
+    //   ]}
+    // />
+    <View
       style={[
         styles.monkey,
         {
@@ -26,6 +33,7 @@ const Jumper = ({ body, size }) => {
           top: y,
           width: sizeWidth,
           height: sizeHeight,
+          backgroundColor: "black",
         },
       ]}
     />
@@ -40,8 +48,19 @@ const Branch = ({ body, size }) => {
   const y = position.y + sizeHeight - 50;
 
   return (
-    <Image
-      source={branch}
+    // <Image
+    //   source={branch}
+    //   style={[
+    //     styles.branch,
+    //     {
+    //       left: x,
+    //       top: y,
+    //       width: sizeWidth,
+    //       height: sizeHeight,
+    //     },
+    //   ]}
+    // />
+    <View
       style={[
         styles.branch,
         {
@@ -49,6 +68,7 @@ const Branch = ({ body, size }) => {
           top: y,
           width: sizeWidth,
           height: sizeHeight,
+          backgroundColor: "green",
         },
       ]}
     />

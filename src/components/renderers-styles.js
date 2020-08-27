@@ -2,8 +2,8 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   monkey: {
-    width: 50,
-    height: 100,
+    width: 40,
+    height: 80,
     position: "absolute",
   },
 
